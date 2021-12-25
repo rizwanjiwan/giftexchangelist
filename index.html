@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Gift Exchange</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+</head>
+<body>
+<div id="app" class="container">
+    <h1>{{header}}</h1>
+    <h2 v-if="people.length>0">Names: </h2>
+    <ul>
+        <li v-for="(person, index) in people">{{person}} <span v-on:click="del(index)" style="color:red">x</span></li>
+    </ul>
+    <input type="text" v-on:keyup.enter="nameSubmitted" v-model="nameBox" placeholder="Type name and hit enter"/><br/>
+    <br/>
+    <button v-on:click="go">Generate Order</button>
+    <br/>
+    <hr>
+    <h2 v-if="order.length>0">Order: </h2>
+    <ol>
+        <li v-for="person in order">{{person}}</li>
+    </ol>
+</div>
+</body>
+<script>
+    let app = new Vue({
+        el: '#app',
+        data: {
+            header: 'Create your list',
+            people:[],
+            order:[],
+            nameBox:""
+        },
+        methods: {
+            nameSubmitted: ()=> {
+                app.people.push(app.nameBox);
+                app.nameBox="";
+            },
+            go:()=> {
+                app.order = app.people
+                    .map((a) => ({sort: Math.random(), value: a}))
+                    .sort((a, b) => a.sort - b.sort)
+                    .map((a) => a.value)
+            },
+            del:(index)=>{
+                app.people.splice(index,1);
+            }
+        }
+    })
+</script>
+</html>
